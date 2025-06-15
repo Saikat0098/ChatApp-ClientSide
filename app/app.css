@@ -1,15 +1,11 @@
 @import "tailwindcss";
+@plugin "daisyui"{
+  themes: light --default, dark , cupcake , retro , forest ,bumblebee, emerald , corporate , synthwave , cyberpunk , valentine , halloween , garden , aqua , lofi , pastel , fantasy , wireframe , black , luxury , dracula;
+}
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
-}
+ 

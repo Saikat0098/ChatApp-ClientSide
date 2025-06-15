@@ -2,14 +2,21 @@ import {
   isRouteErrorResponse,
   Links,
   Meta,
+  Navigate,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
+ 
+ import Navbar from "./components/Navbar";
+ import { useAuthStore } from "./store/useAuthStore";
+ import { useThemeStore } from "./store/useThemeStore";
 import type { Route } from "./+types/root";
 import "./app.css";
-
+import { useEffect } from "react";
+import { Loader } from "lucide-react";
+import { Toaster } from "react-hot-toast";
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -24,8 +31,9 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const {theme} = useThemeStore();
   return (
-    <html lang="en">
+    <html data-theme={theme}  lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,7 +50,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+ const {authUser , checkAuth , isCheckingAuth} = useAuthStore();
+ const {theme} = useThemeStore();
+ useEffect(() =>{
+   checkAuth()
+ } , [checkAuth])
+ console.log("Auth user", authUser);
+ if(isCheckingAuth && !authUser) {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <Loader className="w-10 h-10 animate-spin" />
+    </div>
+  )
+ }
+  return <div data-theme={theme} className="min-h-screen bg-base-200"> 
+    <div>
+    {
+      authUser ? <Navbar />   : <Navigate to="/login" replace />
+    }
+    </div>
+    <Toaster />
+    <Outlet />
+  </div>;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
